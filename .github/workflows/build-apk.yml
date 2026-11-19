@@ -1,8 +1,10 @@
 name: Build MK Esports Debug APK
 
 on:
-  push:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build-debug-apk:
