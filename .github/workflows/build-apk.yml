@@ -77,7 +77,7 @@ jobs:
           gradle --version
           gradle :app:assembleDebug --no-daemon --max-workers=2 \
             -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8" \
-            --stacktrace
+            --stacktrace --info
 
       - name: Upload Debug APK to Artifacts
         uses: actions/upload-artifact@v4
