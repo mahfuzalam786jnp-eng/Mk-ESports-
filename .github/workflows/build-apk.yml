@@ -28,13 +28,11 @@ jobs:
             platforms;android-36.1
             build-tools;36.0.0
 
-      - name: Verify Android SDK licenses and platforms
+      - name: Accept Android SDK Licenses
         run: |
+          set +o pipefail
+          yes | sdkmanager --licenses
           SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-          echo "Using Android SDK at: $SDK_DIR"
-          if command -v sdkmanager >/dev/null 2>&1; then
-            yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          fi
           ls -la "$SDK_DIR/platforms" "$SDK_DIR/build-tools" "$SDK_DIR/licenses"
 
       - name: Restore debug keystore
