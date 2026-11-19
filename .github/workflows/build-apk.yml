@@ -19,11 +19,23 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Accept Android SDK licenses
+      - name: Set up Android SDK (API 36 / 36.1)
+        uses: android-actions/setup-android@v4
+        with:
+          packages: |
+            platform-tools
+            platforms;android-36
+            platforms;android-36.1
+            build-tools;36.0.0
+
+      - name: Verify Android SDK licenses and platforms
         run: |
-          if [ -n "${ANDROID_HOME:-}" ] && [ -d "$ANDROID_HOME/cmdline-tools/latest/bin" ]; then
-            yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          echo "Using Android SDK at: $SDK_DIR"
+          if command -v sdkmanager >/dev/null 2>&1; then
+            yes | sdkmanager --licenses >/dev/null 2>&1 || true
           fi
+          ls -la "$SDK_DIR/platforms" "$SDK_DIR/build-tools" "$SDK_DIR/licenses"
 
       - name: Restore debug keystore
         run: |
@@ -41,7 +53,11 @@ jobs:
           gradle-version: '9.3.1'
 
       - name: Build Debug APK
-        run: gradle :app:assembleDebug --no-daemon
+        run: |
+          gradle --version
+          gradle :app:assembleDebug --no-daemon --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8" \
+            --stacktrace
 
       - name: Upload Debug APK to Artifacts
         uses: actions/upload-artifact@v4
