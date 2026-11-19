@@ -23,14 +23,25 @@ jobs:
         run: |
           set +o pipefail
           SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-          SDKMANAGER=$(find "$SDK_DIR/cmdline-tools" -name sdkmanager -type f 2>/dev/null | sort -V | tail -n 1)
-          if [ -z "$SDKMANAGER" ]; then
-            echo "sdkmanager not found under $SDK_DIR/cmdline-tools" >&2
+          if [ -z "$SDK_DIR" ] || [ ! -d "$SDK_DIR" ]; then
+            echo "Android SDK directory not found (ANDROID_HOME='$ANDROID_HOME', ANDROID_SDK_ROOT='$ANDROID_SDK_ROOT')" >&2
             exit 1
           fi
+          sudo mkdir -p "$SDK_DIR/licenses"
+          sudo chown -R "$(id -un):$(id -gn)" "$SDK_DIR"
+          SDKMANAGER=$(find "$SDK_DIR" \( -path "*/cmdline-tools/*/bin/sdkmanager" -o -path "*/tools/bin/sdkmanager" \) \( -type f -o -type l \) 2>/dev/null | sort -V | tail -n 1)
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found under $SDK_DIR" >&2
+            exit 1
+          fi
+          echo "Using sdkmanager: $SDKMANAGER"
           echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
           echo "$SDK_DIR/platform-tools" >> "$GITHUB_PATH"
-          yes | "$SDKMANAGER" --licenses --sdk_root="$SDK_DIR"
+          yes | "$SDKMANAGER" --licenses --sdk_root="$SDK_DIR" || true
+          if [ ! -s "$SDK_DIR/licenses/android-sdk-license" ]; then
+            echo "Failed to write android-sdk-license in $SDK_DIR/licenses" >&2
+            exit 1
+          fi
 
       - name: Install Android SDK Packages
         run: |
