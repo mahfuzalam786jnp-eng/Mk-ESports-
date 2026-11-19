@@ -19,21 +19,28 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Set up Android SDK (API 36 / 36.1)
-        uses: android-actions/setup-android@v4
-        with:
-          packages: |
-            platform-tools
-            platforms;android-36
-            platforms;android-36.1
-            build-tools;36.0.0
-
       - name: Accept Android SDK Licenses
         run: |
           set +o pipefail
-          yes | sdkmanager --licenses
           SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-          ls -la "$SDK_DIR/platforms" "$SDK_DIR/build-tools" "$SDK_DIR/licenses"
+          SDKMANAGER=$(find "$SDK_DIR/cmdline-tools" -name sdkmanager -type f 2>/dev/null | sort -V | tail -n 1)
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found under $SDK_DIR/cmdline-tools" >&2
+            exit 1
+          fi
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+          echo "$SDK_DIR/platform-tools" >> "$GITHUB_PATH"
+          yes | "$SDKMANAGER" --licenses --sdk_root="$SDK_DIR"
+
+      - name: Install Android SDK Packages
+        run: |
+          set +o pipefail
+          SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          yes | sdkmanager --sdk_root="$SDK_DIR" \
+            "platform-tools" \
+            "platforms;android-36" \
+            "platforms;android-36.1" \
+            "build-tools;36.0.0"
 
       - name: Restore debug keystore
         run: |
