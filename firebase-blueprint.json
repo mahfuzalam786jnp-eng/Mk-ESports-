@@ -1,0 +1,275 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Player account profile with verified mobile number, Free Fire MAX ID, demo wallet balance, and referral stats.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "phoneVerified": { "type": "boolean" },
+        "freeFireUid": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "demoWalletBalance": { "type": "integer" },
+        "referralCode": { "type": "string" },
+        "referredByCode": { "type": "string" },
+        "referralCount": { "type": "integer" },
+        "matchesPlayed": { "type": "integer" },
+        "totalKills": { "type": "integer" },
+        "booyahs": { "type": "integer" },
+        "totalWinningsDemo": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": [
+        "userId", "displayName", "email", "phoneNumber", "phoneVerified",
+        "freeFireUid", "freeFireIgn", "demoWalletBalance", "referralCode",
+        "referredByCode", "referralCount", "matchesPlayed", "totalKills",
+        "booyahs", "totalWinningsDemo", "createdAt", "updatedAt"
+      ]
+    },
+    "WalletTransaction": {
+      "title": "WalletTransaction",
+      "description": "Simulated demo wallet ledger entry (no real money).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["WELCOME_BONUS", "DEMO_TOPUP", "REFERRAL_BONUS", "ENTRY_FEE", "PRIZE_REWARD", "REFUND"] },
+        "amountDemo": { "type": "integer" },
+        "credit": { "type": "boolean" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "tournamentId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "type", "amountDemo", "credit", "title", "description", "tournamentId", "createdAt"]
+    },
+    "UserRegistration": {
+      "title": "UserRegistration",
+      "description": "User-scoped mirror of tournament registration for fast history queries.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tournamentId": { "type": "string" },
+        "tournamentTitle": { "type": "string" },
+        "mode": { "type": "string", "enum": ["SOLO", "DUO", "SQUAD"] },
+        "category": { "type": "string", "enum": ["FREE", "PAID_DEMO"] },
+        "entryFeeDemo": { "type": "integer" },
+        "freeFireUid": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "teamName": { "type": "string" },
+        "partnerInfo": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "slotNumber": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": [
+        "userId", "tournamentId", "tournamentTitle", "mode", "category",
+        "entryFeeDemo", "freeFireUid", "freeFireIgn", "teamName", "partnerInfo",
+        "status", "slotNumber", "createdAt", "updatedAt"
+      ]
+    },
+    "ReferralCode": {
+      "title": "ReferralCode",
+      "description": "Public referral code lookup mapping code to owner UID and IGN.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "ownerIgn": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["code", "ownerUid", "ownerIgn", "createdAt"]
+    },
+    "Tournament": {
+      "title": "Tournament",
+      "description": "Free Fire MAX Solo, Duo, or Squad tournament event.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "mode": { "type": "string", "enum": ["SOLO", "DUO", "SQUAD"] },
+        "category": { "type": "string", "enum": ["FREE", "PAID_DEMO"] },
+        "mapName": { "type": "string" },
+        "entryFeeDemo": { "type": "integer" },
+        "prizePoolDemo": { "type": "integer" },
+        "perKillRewardDemo": { "type": "integer" },
+        "maxSlots": { "type": "integer" },
+        "filledSlots": { "type": "integer" },
+        "scheduledTimeText": { "type": "string" },
+        "status": { "type": "string", "enum": ["UPCOMING", "LIVE", "COMPLETED", "CANCELLED"] },
+        "rulesSummary": { "type": "string" },
+        "roomPublished": { "type": "boolean" },
+        "roomPublishNote": { "type": "string" },
+        "winnerSummary": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": [
+        "title", "mode", "category", "mapName", "entryFeeDemo", "prizePoolDemo",
+        "perKillRewardDemo", "maxSlots", "filledSlots", "scheduledTimeText",
+        "status", "rulesSummary", "roomPublished", "roomPublishNote",
+        "winnerSummary", "createdBy", "createdAt", "updatedAt"
+      ]
+    },
+    "TournamentRegistration": {
+      "title": "TournamentRegistration",
+      "description": "Player or team registration document inside a tournament.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "tournamentId": { "type": "string" },
+        "tournamentTitle": { "type": "string" },
+        "playerName": { "type": "string" },
+        "freeFireUid": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "mode": { "type": "string", "enum": ["SOLO", "DUO", "SQUAD"] },
+        "teamName": { "type": "string" },
+        "partnerInfo": { "type": "string" },
+        "entryFeeDemo": { "type": "integer" },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "slotNumber": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": [
+        "userId", "tournamentId", "tournamentTitle", "playerName", "freeFireUid",
+        "freeFireIgn", "mode", "teamName", "partnerInfo", "entryFeeDemo",
+        "status", "slotNumber", "createdAt", "updatedAt"
+      ]
+    },
+    "TournamentSlot": {
+      "title": "TournamentSlot",
+      "description": "Public non-PII slot roster entry for a tournament.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "teamName": { "type": "string" },
+        "mode": { "type": "string", "enum": ["SOLO", "DUO", "SQUAD"] },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "slotNumber": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "freeFireIgn", "teamName", "mode", "status", "slotNumber", "createdAt", "updatedAt"]
+    },
+    "RoomCredential": {
+      "title": "RoomCredential",
+      "description": "Secret custom room ID and password accessible only to admin and approved tournament participants.",
+      "type": "object",
+      "properties": {
+        "tournamentId": { "type": "string" },
+        "roomId": { "type": "string" },
+        "roomPassword": { "type": "string" },
+        "serverRegion": { "type": "string" },
+        "instructions": { "type": "string" },
+        "publishedBy": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["tournamentId", "roomId", "roomPassword", "serverRegion", "instructions", "publishedBy", "updatedAt"]
+    },
+    "MatchResult": {
+      "title": "MatchResult",
+      "description": "Official placement and kill leaderboard entry for a completed tournament.",
+      "type": "object",
+      "properties": {
+        "tournamentId": { "type": "string" },
+        "playerUserId": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "teamName": { "type": "string" },
+        "placement": { "type": "integer" },
+        "kills": { "type": "integer" },
+        "points": { "type": "integer" },
+        "prizeDemo": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["tournamentId", "playerUserId", "freeFireIgn", "teamName", "placement", "kills", "points", "prizeDemo", "createdAt", "updatedAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Global MK Esports player leaderboard stats (no PII).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "freeFireIgn": { "type": "string" },
+        "freeFireUid": { "type": "string" },
+        "totalKills": { "type": "integer" },
+        "booyahs": { "type": "integer" },
+        "matchesPlayed": { "type": "integer" },
+        "points": { "type": "integer" },
+        "demoWinnings": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "freeFireIgn", "freeFireUid", "totalKills", "booyahs", "matchesPlayed", "points", "demoWinnings", "createdAt", "updatedAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Customer support request submitted by an authenticated player.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "playerIgn": { "type": "string" },
+        "category": { "type": "string", "enum": ["TOURNAMENT", "ROOM_ISSUE", "DEMO_WALLET", "ACCOUNT", "OTHER"] },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["OPEN", "RESOLVED"] },
+        "adminReply": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Must be FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "playerIgn", "category", "subject", "message", "status", "adminReply", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private player profile and demo wallet balance."
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/WalletTransaction" },
+      "description": "Simulated demo wallet transaction ledger."
+    },
+    "/users/{userId}/registrations/{tournamentId}": {
+      "schema": { "$ref": "#/entities/UserRegistration" },
+      "description": "User's tournament registration history."
+    },
+    "/referralCodes/{code}": {
+      "schema": { "$ref": "#/entities/ReferralCode" },
+      "description": "Lookup index for player referral codes."
+    },
+    "/tournaments/{tournamentId}": {
+      "schema": { "$ref": "#/entities/Tournament" },
+      "description": "Free Fire MAX Solo, Duo, and Squad tournaments."
+    },
+    "/tournaments/{tournamentId}/registrations/{userId}": {
+      "schema": { "$ref": "#/entities/TournamentRegistration" },
+      "description": "Per-tournament player registration records."
+    },
+    "/tournaments/{tournamentId}/slots/{userId}": {
+      "schema": { "$ref": "#/entities/TournamentSlot" },
+      "description": "Public non-PII slot roster for each tournament."
+    },
+    "/tournaments/{tournamentId}/roomCredentials/secret": {
+      "schema": { "$ref": "#/entities/RoomCredential" },
+      "description": "Protected Room ID and Password visible only to admin and approved participants."
+    },
+    "/tournaments/{tournamentId}/results/{resultId}": {
+      "schema": { "$ref": "#/entities/MatchResult" },
+      "description": "Official match results and winner payouts."
+    },
+    "/leaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Global MK Esports player leaderboard."
+    },
+    "/supportTickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Player customer support tickets."
+    }
+  }
+}

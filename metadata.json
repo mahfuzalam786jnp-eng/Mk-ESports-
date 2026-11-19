@@ -1,0 +1,6 @@
+{
+  "name": "MK Esports",
+  "description": "MK Esports - Free Fire MAX tournament management application with Solo, Duo, and Squad tournaments, room ID/password distribution, leaderboards, demo wallet, referral codes, and owner-controlled admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
